@@ -364,7 +364,7 @@ h1 em,.h2 em{font-style:normal;color:var(--lime)}
 </section>
 
 <!-- 1 system -->
-<section class="sc sl-r" id="system" data-t="The system" data-steps="6" style="--n:6">
+<section class="sc sl-r" id="system" data-t="The system" data-steps="7" style="--n:7">
  <div class="pin">
   <div class="panel">
    <div class="ey r">The system</div>
@@ -562,7 +562,8 @@ const SYS=[['Idea','Orientation, your knowledge base, the problem and the concep
  ['Model','The business model, the strategy and the financial plan, built line by line from the counted market.'],
  ['Build','Tactical plan, brand, product and setup, drafted section by section and approved by you.'],
  ['Prepare','Fundraising strategy, valuation, materials and the data room, assembled from the same work.'],
- ['Raise','Deal Flow runs the pipeline and Deal Terms reads every term. The agents run it; you decide.']];
+ ['Raise','Deal Flow runs the pipeline and Deal Terms reads every term. The agents run it; you decide.'],
+ ['Manage','Investor Relations manages the relationship with your investors after the close, keeping holders informed with updates drawn from the live numbers.']];
 const TEAM=[['aether','Aether','Chief of staff','Decides what the venture needs and who is needed for it, briefs them, hands off and reports back. Present from your first message and never removed from the team.'],
  ['identity','Identity','Who you are','Learns you and your co-founders and keeps the record current. Who can see what, and your data rights, live here.'],
  ['assessment','Assessment','Where you stand','Scores the venture on four dimensions from evidence, names its capability gaps, and reruns the read at investment readiness.'],
@@ -650,7 +651,7 @@ function stepper(si,rail,card,bar,items,fill){const lis=items.map((it,i)=>{const
   if(rail.scrollWidth>rail.clientWidth+4)rail.scrollTo({left:lis[i].offsetLeft-24,behavior:'smooth'});
   bar.style.transform='scaleX('+((i+1)/items.length)+')';swap(card,sw=>fill(sw,i),first);}};}
 const W={};
-W[1]=stepper(1,$('#sysRail'),$('#sysCard'),$('#sysBar i'),SYS.map(x=>x[0]),(sw,i)=>{sw.querySelector('.pn').textContent='Step 0'+(i+1)+' of 06';sw.querySelector('h3').textContent=SYS[i][0];sw.querySelector('p').textContent=SYS[i][1];});
+W[1]=stepper(1,$('#sysRail'),$('#sysCard'),$('#sysBar i'),SYS.map(x=>x[0]),(sw,i)=>{sw.querySelector('.pn').textContent='Step 0'+(i+1)+' of 07';sw.querySelector('h3').textContent=SYS[i][0];sw.querySelector('p').textContent=SYS[i][1];});
 W[3]=stepper(3,$('#teamRail'),$('#teamCard'),$('#teamBar i'),TEAM.map(x=>x[1]),(sw,i)=>{sw.querySelector('.pn').textContent=TEAM[i][2];sw.querySelector('h3').textContent=TEAM[i][1];sw.querySelector('p').textContent=TEAM[i][3];});
 W[4]=stepper(4,$('#jrRail'),$('#jrCard'),$('#jrBar i'),ST.map(x=>x[0]),(sw,i)=>{sw.querySelector('.pn').textContent='Stage 0'+(i+1)+' of 07';sw.querySelector('h3').textContent=ST[i][0];sw.querySelector('p').textContent=ST[i][1];sw.querySelector('.art').textContent=ST[i][2];});
 const traits=$$('#traits li');traits.forEach((l,i)=>l.addEventListener('click',()=>goTo(2,i)));
@@ -815,7 +816,7 @@ const G={ok:false};
  /* connecting light path between plates */
  const scv=new THREE.CatmullRomCurve3([new THREE.Vector3(MAP.build[0],H(MAP.build[0],MAP.build[1])+.2,MAP.build[1]),...PL]);
  const stairLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(scv.getPoints(160)),new THREE.LineDashedMaterial({color:PALE,transparent:true,opacity:.5,dashSize:.12,gapSize:.08,depthWrite:false}));stairLine.computeLineDistances();stairs.add(stairLine);
- const gate=new THREE.Group();gate.position.copy(PL[5]).add(new THREE.Vector3(0,1.05,0));gate.lookAt(new THREE.Vector3(0,gate.position.y,0));stairs.add(gate);
+ const gate=new THREE.Group();gate.position.copy(PL[5]).add(new THREE.Vector3(0,1.05,0));gate.lookAt(new THREE.Vector3(0,gate.position.y,0));gate.visible=false;
  const gateR=new THREE.Mesh(new THREE.TorusGeometry(.95,.03,12,120),basic(LIME,.5));gate.add(gateR);
  const gateR2=new THREE.Mesh(new THREE.RingGeometry(1.08,1.1,120,1,0,Math.PI*1.4),basic(PALE,.4));gate.add(gateR2);
  const gateD=new THREE.Mesh(new THREE.CircleGeometry(.92,64),new THREE.MeshBasicMaterial({map:GLOW,color:LIME,transparent:true,opacity:.1,depthWrite:false,blending:AB}));gate.add(gateD);
@@ -988,6 +989,7 @@ function resize(){measure();if(!G.ok)return;const w=innerWidth,h=innerHeight;if(
 addEventListener('resize',()=>{resize();if(STOPS.length){buildStops();if(!anim)goStop(si,true);}});STACKQ.addEventListener&&STACKQ.addEventListener('change',resize);
 const menuA=$$('.menu a');
 function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;const t=(now-T0)/1000;
+ if(window._hold&&now<window._hold&&(scrollY!==0||anim)){anim=null;scrollTo(0,0);si=0;}
  if(anim){const q=clamp((now-anim.t0)/anim.dur);scrollTo(0,lerp(anim.from,anim.to,ease(q)));if(q>=1)anim=null;}
  const y=scrollY;
  vel=lerp(vel,clamp(Math.abs(y-lastY)/Math.max(dt,.001)/2500),.08);lastY=y;
@@ -1009,7 +1011,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;const t=(now
   camT.set(cur.tx,cur.ty,cur.tz);c.lookAt(camT);
   c.setViewOffset(GW,GH,-cur.ox*GW,cur.oy*GH,GW,GH);
   let hl=null;if(act===3){const st=Math.min(6,Math.floor(ap*7));hl=TEAMK[st]==='more'?'all4':TEAMK[st];}else if(act===2)hl='aether';
-  else if(act===1){const st=Math.min(5,Math.floor(ap*6));hl=['identity','assessment','staffing','build','dealflow','dealterms'][st];}
+  else if(act===1){const st=Math.min(6,Math.floor(ap*7));hl=['identity','assessment','staffing','build','dealflow','dealterms','investorrel'][st];}
   G.act=act;G.update(cur,t,dt,hl);
   G.r.render(G.scene,c);
   /* labels */
@@ -1019,7 +1021,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;const t=(now
    l.el.style.opacity=o.toFixed(3);l.el.style.pointerEvents=o>.5?'auto':'none';l.el.classList.toggle('on',isOn&&o>.1);
    l.el.style.transform='translate3d('+((V3.x*.5+.5)*wv).toFixed(1)+'px,'+((-V3.y*.5+.5)*hv).toFixed(1)+'px,0) translate(-50%,-140%)';}
   /* relay tag */
-  {const tg=G.tokTag;const st=Math.min(5,Math.floor(cur.route*6*.999+.0001));if(tg._s!==st){tg._s=st;tg.innerHTML='<i>0'+(st+1)+'</i><span>'+SYS[st][0]+'</span>';}
+  {const tg=G.tokTag;const st=Math.min(6,Math.floor(cur.route*7*.999+.0001));if(tg._s!==st){tg._s=st;tg.innerHTML='<i>0'+(st+1)+'</i><span>'+SYS[st][0]+'</span>';}
    G.rc.getPointAt(clamp(cur.route),V3);V3.y+=1.1;V3.project(c);tg.style.opacity=(cur.tokA*cur.isl).toFixed(3);tg.style.transform='translate3d('+((V3.x*.5+.5)*wv).toFixed(1)+'px,'+((-V3.y*.5+.5)*hv).toFixed(1)+'px,0) translate(-50%,-100%)';}
   {const pm=G.pmark,o=cur.portal;if(o>.01){V3.set(0,0,0);G.portal.localToWorld(V3);const cx=V3.clone().project(c);V3.set(3.2,0,0);G.portal.localToWorld(V3);V3.project(c);const rp=Math.abs(V3.x-cx.x)*.5*wv;
    pm.style.opacity=(o*(cx.z<1?1:0)).toFixed(3);pm.style.width=(rp*.5).toFixed(1)+'px';pm.style.transform='translate3d('+((cx.x*.5+.5)*wv).toFixed(1)+'px,'+((-cx.y*.5+.5)*hv).toFixed(1)+'px,0) translate(-50%,-50%)';}else pm.style.opacity=0;}
@@ -1029,7 +1031,8 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;const t=(now
 
 /* ---------------- boot ---------------- */
 function boot(){
- scrollTo(0,0);resize();buildStops();setTimeout(()=>{resize();buildStops();if(!anim)goStop(si,true);},400);
+ const toTop=()=>{try{document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}catch(e){}document.documentElement.scrollTop=0;document.body.scrollTop=0;scrollTo(0,0);si=0;};
+ toTop();resize();buildStops();window._hold=performance.now()+2200;['touchstart','wheel','keydown','pointerdown'].forEach(ev=>addEventListener(ev,()=>{window._hold=0;},{once:true,passive:true}));setTimeout(()=>{resize();buildStops();if(!anim)goStop(si,true);},400);
  addEventListener('pageshow',()=>{scrollTo(0,0);si=0;});
  requestAnimationFrame(t=>{last=t;T0=t;requestAnimationFrame(frame);});
  if(G.ok)setTimeout(()=>$('#gl').classList.add('on'),60);
