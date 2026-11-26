@@ -339,7 +339,7 @@ h1 em,.h2 em{font-style:normal;color:var(--lime)}
 
 <header>
  <a class="logo" href="#" aria-label="QuidQuo, back to the top" data-go="0"><svg viewBox="0 0 2111 430"><use href="#logoH"/></svg></a>
- <nav class="menu" aria-label="Main"><a data-go="1">The system</a><a data-go="3">Agents</a><a data-go="4">Journey</a><a data-go="5">Platform</a><a data-go="7">Who it is for</a></nav>
+ <nav class="menu" aria-label="Main"><a data-go="1">The system</a><a data-go="3">Agents</a><a data-go="4">What you get</a><a data-go="5">Platform</a><a data-go="7">Who it is for</a></nav>
  <div class="side"><button class="chap" id="chapBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Jump to a chapter"><b id="chapN">01</b><span>/09</span><svg class="i" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><a class="si" href="mailto:info@quidquo.com">Contact</a><button class="btn go sm" data-req>Request access</button></div>
 </header>
 <button class="totop tf" type="button" aria-label="Back to the top"><svg class="i"><use href="#aru"/></svg><span>Top</span></button>
@@ -418,12 +418,12 @@ h1 em,.h2 em{font-style:normal;color:var(--lime)}
 </section>
 
 <!-- 4 journey -->
-<section class="sc sl-l" id="journey" data-t="Journey" data-steps="7" style="--n:7">
+<section class="sc sl-l" id="journey" data-t="What you get" data-steps="7" style="--n:7">
  <div class="pin">
   <div class="panel">
-   <div class="ey r">The journey</div>
-   <h2 class="h2 split">Comprehensive, idea to investment ready and fundraising</h2>
-   <p class="lead cut r d1">Build works through nine sub-agents, each with its own chat. The venture profile and data room assemble themselves as the work happens.</p>
+   <div class="ey r">What you get</div>
+   <h2 class="h2 split">Everything an investor asks for, <em>built as you work</em></h2>
+   <p class="lead cut r d1">Every conversation with Build produces structured output, not advice. It assembles into your venture profile and data room, and every revision is versioned with the reason.</p>
    <ol class="rail r d1" id="jrRail"></ol>
    <div class="card lum r d2" id="jrCard"><div class="sw"><span class="pn"></span><h3></h3><p></p><span class="art"></span></div></div>
    <div class="pbar r d3" id="jrBar"><i></i></div>
@@ -574,13 +574,14 @@ const TEAM=[['aether','Aether','Chief of staff','Decides what the venture needs 
 const NAMES={aether:'Aether',identity:'Identity',assessment:'Assessment',staffing:'Staffing',build:'Build',dealflow:'Deal Flow',dealterms:'Deal Terms',investorrel:'Investor Relations',market:'Market',presence:'Presence'};
 const TIPS={staffing:'Recommends your tier and kits.',dealterms:'Reads every term.',investorrel:'Keeps holders informed after the close.',presence:'Turns finished work into drafts you can publish.'};
 TEAM.forEach(t=>{if(t[0]!=='more')TIPS[t[0]]=t[3].split('. ')[0]+'.';});
-const ST=[['Idea','Orientation, your knowledge base, the problem and the concept, with an AI test against simulated customers.','Idea sub-agent'],
- ['Validated','Real interviews, with simulated evidence kept in its own column, and the market counted from source.','Validation sub-agent'],
- ['Modelled','The business model, the phased strategy and a financial plan built from the tactical plan, never typed in.','3 sub-agents'],
- ['Built','Tactical plan, brand, product and setup, section by section, each waiting for your approval.','4 sub-agents'],
- ['Documented','Fundraising strategy, valuation, materials and the data room, assembled as the work happens.','Investment readiness'],
- ['Investment ready','Assessment reruns the read from scratch. If the evidence is not there, the materials are held back.','Readiness gate cleared'],
- ['Fundraising','Deal Flow runs the pipeline with a reason on every move, Deal Terms reads every term, and Investor Relations keeps holders informed after the close.','Deal Flow · Deal Terms · Investor Relations']];
+const ST=[['Knowledge base','Your documents, organised, with a record of what each new one changed in the case.','Idea · orientation and knowledge curation'],
+ ['Validated market','Market definition and problem statement as structured fields, with real interviews kept apart from simulated evidence.','Idea · Validation'],
+ ['Model and financial plan','The business model, the strategy and a financial plan built from the tactical plan, never typed in.','Business model · Tactical plan · Financial plan'],
+ ['Brand, product and setup','Drafted section by section, each one waiting for your approval before it lands.','Brand · Product · Setup'],
+ ['Fundraising materials','Fundraising strategy, valuation and the materials, built on the same numbers as the model.','Investment readiness'],
+ ['Venture profile and data room','Living documents, refined in place. Build runs the analysis an investor would and shows you where it is thin, before an investor does.','Investor-grade check'],
+ ['Readiness verdict','Assessment reruns the read from scratch. If the evidence is not there, the materials are held back.','Assessment']];
+const STS=['Knowledge base','Market','Model','Brand & product','Materials','Data room','Verdict'];
 const TOUR=[{k:'Command Centre',h:'Your whole team on one map',p:'Aether at the centre and every senior on its own peak. What shipped, what is waiting and what needs you, with team, performance and kits one click away.',c:['Live activity, people and agents','Decisions waiting on you','Performance and capacity','Kit recommendations'],u:'command-centre',f:['watch1','watch2','watch3']},
  {k:'Assess',h:'Know exactly where the venture stands',p:'Four dimensions with every score traced to its evidence, a Finding when your documents hold up, and the whole record in Venture Context.',c:['Your figures recounted from source','Confidence shown per dimension','The Finding, gated on evidence','Blocking findings named plainly'],u:'assessment',f:['assess1','assess2','assess3']},
  {k:'Build',h:'The investment case, sub-agent by sub-agent',p:'Each Build sub-agent has its own chat, with its progress shown. Its output opens beside the conversation, and nothing lands until you approve it.',c:['Nine sub-agent chats','Output beside the chat','Approve, request changes or reject','Venture Context updates itself'],u:'build/financial-plan',f:['build1','build2']},
@@ -653,7 +654,7 @@ function stepper(si,rail,card,bar,items,fill){const lis=items.map((it,i)=>{const
 const W={};
 W[1]=stepper(1,$('#sysRail'),$('#sysCard'),$('#sysBar i'),SYS.map(x=>x[0]),(sw,i)=>{sw.querySelector('.pn').textContent='Step 0'+(i+1)+' of 07';sw.querySelector('h3').textContent=SYS[i][0];sw.querySelector('p').textContent=SYS[i][1];});
 W[3]=stepper(3,$('#teamRail'),$('#teamCard'),$('#teamBar i'),TEAM.map(x=>x[1]),(sw,i)=>{sw.querySelector('.pn').textContent=TEAM[i][2];sw.querySelector('h3').textContent=TEAM[i][1];sw.querySelector('p').textContent=TEAM[i][3];});
-W[4]=stepper(4,$('#jrRail'),$('#jrCard'),$('#jrBar i'),ST.map(x=>x[0]),(sw,i)=>{sw.querySelector('.pn').textContent='Stage 0'+(i+1)+' of 07';sw.querySelector('h3').textContent=ST[i][0];sw.querySelector('p').textContent=ST[i][1];sw.querySelector('.art').textContent=ST[i][2];});
+W[4]=stepper(4,$('#jrRail'),$('#jrCard'),$('#jrBar i'),STS,(sw,i)=>{sw.querySelector('.pn').textContent='Output 0'+(i+1)+' of 07';sw.querySelector('h3').textContent=ST[i][0];sw.querySelector('p').textContent=ST[i][1];sw.querySelector('.art').textContent=ST[i][2];});
 const traits=$$('#traits li');traits.forEach((l,i)=>l.addEventListener('click',()=>goTo(2,i)));
 W[2]={set(i){traits.forEach((l,k)=>l.classList.toggle('on',k===i));}};
 function oneAt(si,chips,items){$$('button',chips).forEach(b=>b.addEventListener('click',()=>goTo(si,+b.dataset.i)));let ci=-1;
@@ -801,34 +802,39 @@ const G={ok:false};
  const RAZ=[];{let prev=null;for(let i=0;i<=100;i++){const p=rc.getPointAt(i/100);let a=Math.atan2(p.x,p.z);if(prev!=null){while(a-prev>Math.PI)a-=Math.PI*2;while(a-prev<-Math.PI)a+=Math.PI*2;}RAZ.push(a);prev=a;}}
  G.routeAz=t=>{const f=clamp(t)*100,i=Math.min(99,Math.floor(f));return lerp(RAZ[i],RAZ[i+1],f-i);};
 
- /* the journey staircase: six plates climbing off the Build peak, out past the rim to the readiness gate */
+ /* what you get: each output flies out of Build and slots into one record, the data room */
  const stairs=new THREE.Group();scene.add(stairs);G.stairs=stairs;
  const bAz=Math.atan2(MAP.build[0],MAP.build[1]);G.bAz=bAz;
- const PL=[];for(let i=0;i<7;i++){const a=bAz-.62+i*.25,r=5.0+i*.62,y=1.25+i*.62;PL.push(new THREE.Vector3(Math.sin(a)*r,y,Math.cos(a)*r));}
- G.PL=PL;
- const plates=PL.map((p,i)=>{const g=new THREE.Group();g.position.copy(p);stairs.add(g);
-  const geo=new THREE.CylinderGeometry(.62,.62,.07,6);
-  const top=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x0b130a,transparent:true,opacity:.85,depthWrite:false}));g.add(top);
-  const ed=new THREE.LineSegments(new THREE.EdgesGeometry(geo),new THREE.LineBasicMaterial({color:LIME,transparent:true,opacity:.6,depthWrite:false,blending:AB}));g.add(ed);
-  const gl=new THREE.Mesh(new THREE.CircleGeometry(.9,48),new THREE.MeshBasicMaterial({map:GLOW,color:LIME,transparent:true,opacity:.25,depthWrite:false,blending:AB}));gl.rotation.x=-Math.PI/2;gl.position.y=-.05;g.add(gl);
-  const st=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,p.y,6,1,true),basic(LIME,.18));st.position.y=-p.y/2;g.add(st);
-  return {g,top,ed,gl,lit:0};});
- /* connecting light path between plates */
- const scv=new THREE.CatmullRomCurve3([new THREE.Vector3(MAP.build[0],H(MAP.build[0],MAP.build[1])+.2,MAP.build[1]),...PL]);
- const stairLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(scv.getPoints(160)),new THREE.LineDashedMaterial({color:PALE,transparent:true,opacity:.5,dashSize:.12,gapSize:.08,depthWrite:false}));stairLine.computeLineDistances();stairs.add(stairLine);
- const gate=new THREE.Group();gate.position.copy(PL[5]).add(new THREE.Vector3(0,1.05,0));gate.lookAt(new THREE.Vector3(0,gate.position.y,0));gate.visible=false;
- const gateR=new THREE.Mesh(new THREE.TorusGeometry(.95,.03,12,120),basic(LIME,.5));gate.add(gateR);
- const gateR2=new THREE.Mesh(new THREE.RingGeometry(1.08,1.1,120,1,0,Math.PI*1.4),basic(PALE,.4));gate.add(gateR2);
- const gateD=new THREE.Mesh(new THREE.CircleGeometry(.92,64),new THREE.MeshBasicMaterial({map:GLOW,color:LIME,transparent:true,opacity:.1,depthWrite:false,blending:AB}));gate.add(gateD);
- const inv=[];{const c=PL[6];for(let k=0;k<7;k++){const sp=glowSprite(.34,k===2?AMB:PALE,.9);stairs.add(sp);inv.push({sp,a:k/7*Math.PI*2});}
-  const ir=new THREE.Mesh(new THREE.RingGeometry(1.02,1.04,96),basic(PALE,.35));ir.rotation.x=-Math.PI/2;ir.position.copy(c).add(new THREE.Vector3(0,.25,0));stairs.add(ir);}
- const climber=new THREE.Group();stairs.add(climber);
-
- const clG=glowSprite(1.2,LIME,.7);clG.position.y=.25;climber.add(clG);
- const clC=glowSprite(.38,0xffffff,1);clC.position.y=.25;climber.add(clC);
- const clR=new THREE.Mesh(new THREE.RingGeometry(.4,.43,64),basic(LIME,.9));clR.rotation.x=-Math.PI/2;clR.position.y=.05;climber.add(clR);
- G.stairPos=t=>{t=clamp(t,0,6);const i=Math.min(5,Math.floor(t)),f=ss(0,1,t-i);const p=PL[i].clone().lerp(PL[i+1],f);p.y+=Math.sin(f*Math.PI)*.45;return p;};
-
+ const TW=new THREE.Vector3(Math.sin(bAz)*7.5,0,Math.cos(bAz)*7.5);G.TW=TW;const Y0=1.3,DY=.46;G.TY=[Y0,DY];
+ const SRC=new THREE.Vector3(MAP.build[0],H(MAP.build[0],MAP.build[1])+1.4,MAP.build[1]);
+ function slabTex(k){const W=512,Hh=340,c=document.createElement('canvas');c.width=W;c.height=Hh;const g=c.getContext('2d');
+  const L='rgba(198,255,52,',P='rgba(228,255,166,';g.lineCap='round';g.lineJoin='round';
+  const rr=(x,y,w,h,r)=>{g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();};
+  g.fillStyle='rgba(14,22,10,.85)';rr(6,6,W-12,Hh-12,26);g.fill();g.strokeStyle=L+'.75)';g.lineWidth=4;g.stroke();
+  g.strokeStyle=L+'.35)';g.lineWidth=3;g.beginPath();g.moveTo(34,62);g.lineTo(W-34,62);g.stroke();
+  g.fillStyle=L+'1)';g.beginPath();g.arc(48,36,9,0,7);g.fill();g.fillStyle=P+'.55)';g.fillRect(70,30,120,12);
+  g.lineWidth=5;
+  if(k===0){for(let i=0;i<6;i++){const x=56+(i%3)*140,y=92+Math.floor(i/3)*112;g.strokeStyle=(i===4?L+'1)':P+'.7)');g.beginPath();g.moveTo(x,y);g.lineTo(x+70,y);g.lineTo(x+94,y+24);g.lineTo(x+94,y+92);g.lineTo(x,y+92);g.closePath();g.stroke();for(let j=0;j<3;j++){g.beginPath();g.moveTo(x+16,y+40+j*16);g.lineTo(x+70,y+40+j*16);g.stroke();}}}
+  if(k===1){[[150,96],[112,72],[70,46]].forEach(([r,o],i)=>{g.strokeStyle=i===2?L+'1)':P+(.35+i*.2)+')';g.beginPath();g.arc(170,200,r*.75,0,7);g.stroke();});for(let i=0;i<5;i++){const h=[60,90,120,150,190][i];g.fillStyle=i===4?L+'1)':P+'.45)';g.fillRect(320+i*30,300-h,18,h);}}
+  if(k===2){g.strokeStyle=P+'.25)';for(let i=0;i<4;i++){g.beginPath();g.moveTo(40,120+i*50);g.lineTo(W-40,120+i*50);g.stroke();}g.strokeStyle=L+'1)';g.lineWidth=7;g.beginPath();[[40,290],[120,262],[200,240],[280,200],[360,160],[440,104],[472,90]].forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.stroke();}
+  if(k===3){['#C6FF34','#A8E01F','#E4FFA6','#5E625A'].forEach((col,i)=>{g.fillStyle=col;g.beginPath();g.arc(80+i*92,150,36,0,7);g.fill();});g.strokeStyle=P+'.6)';for(let i=0;i<3;i++){g.beginPath();g.moveTo(44,232+i*30);g.lineTo(i===2?280:470,232+i*30);g.stroke();}}
+  if(k===4){[[-14,.45],[0,.7],[14,1]].forEach(([a,o],i)=>{g.save();g.translate(256,206);g.rotate(a*Math.PI/180);g.strokeStyle=(i===2?L:P)+o+')';rr(-150,-80,300,170,14);g.stroke();if(i===2){g.fillStyle=L+'.9)';g.fillRect(-120,-50,90,14);g.fillStyle=P+'.5)';for(let j=0;j<3;j++)g.fillRect(-120,-16+j*26,200-j*40,10);}g.restore();});}
+  if(k===5){for(let i=0;i<8;i++){const x=46+(i%4)*110,y=96+Math.floor(i/4)*110;g.strokeStyle=(i===6?'rgba(255,176,32,1)':i<5?L+'.95)':P+'.6)');g.beginPath();g.moveTo(x,y+14);g.lineTo(x+30,y+14);g.lineTo(x+40,y+26);g.lineTo(x+86,y+26);g.lineTo(x+86,y+84);g.lineTo(x,y+84);g.closePath();g.stroke();}}
+  if(k===6){g.strokeStyle='rgba(58,64,51,1)';g.lineWidth=18;g.beginPath();g.arc(256,214,96,0,7);g.stroke();g.strokeStyle=L+'1)';g.beginPath();g.arc(256,214,96,-Math.PI/2,Math.PI*1.1);g.stroke();g.lineWidth=12;g.beginPath();g.moveTo(214,216);g.lineTo(246,248);g.lineTo(302,186);g.stroke();}
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=8;t.premultiplyAlpha=true;return t;}
+ const slabs=[];for(let k=0;k<7;k++){const g=new THREE.Group();stairs.add(g);
+  const base=new THREE.Mesh(new THREE.BoxGeometry(2.0,.07,1.33),new THREE.MeshBasicMaterial({color:0x0a1208,transparent:true,opacity:.85,depthWrite:false}));g.add(base);
+  const ed=new THREE.LineSegments(new THREE.EdgesGeometry(base.geometry),new THREE.LineBasicMaterial({color:LIME,transparent:true,opacity:.5,depthWrite:false,blending:AB}));g.add(ed);
+  const top=new THREE.Mesh(new THREE.PlaneGeometry(1.94,1.29),new THREE.MeshBasicMaterial({map:slabTex(k),transparent:true,opacity:.9,depthWrite:false,premultipliedAlpha:true}));top.rotation.x=-Math.PI/2;top.position.y=.04;g.add(top);
+  const gl=new THREE.Mesh(new THREE.PlaneGeometry(3.2,2.4),new THREE.MeshBasicMaterial({map:GLOW,color:LIME,transparent:true,opacity:0,depthWrite:false,blending:AB}));gl.rotation.x=-Math.PI/2;gl.position.y=-.06;g.add(gl);
+  const trail=glowSprite(.9,LIME,0);g.add(trail);
+  slabs.push({g,base,ed,top,gl,trail,fin:new THREE.Vector3(TW.x,Y0+k*DY,TW.z)});}
+ G.SLP=slabs.map(s=>s.fin);
+ const frame=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(2.4,6*DY+.5,1.7)),new THREE.LineBasicMaterial({color:PALE,transparent:true,opacity:0,depthWrite:false,blending:AB}));frame.position.set(TW.x,Y0+3*DY,TW.z);stairs.add(frame);
+ const scan=new THREE.Mesh(new THREE.PlaneGeometry(2.5,1.8),new THREE.MeshBasicMaterial({map:GLOW,color:LIME,transparent:true,opacity:0,depthWrite:false,blending:AB,side:THREE.DoubleSide}));scan.rotation.x=-Math.PI/2;stairs.add(scan);
+ const col=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,6*DY+1.6,8,1,true),basic(LIME,.25));col.position.set(TW.x,Y0+3*DY-.3,TW.z);stairs.add(col);
+ const pad=new THREE.Mesh(new THREE.RingGeometry(.9,.94,96),basic(LIME,.45));pad.rotation.x=-Math.PI/2;pad.position.set(TW.x,Y0-.5,TW.z);stairs.add(pad);
+ G.stairPos=t=>{t=clamp(t,0,6);return new THREE.Vector3(TW.x,Y0+t*DY,TW.z);};
  /* one record: three documents that disagree melt into one orb */
  const parts=new THREE.Group();parts.position.set(0,2.7,0);scene.add(parts);G.parts=parts;
  {const PN=LOW?1800:3000,A=new Float32Array(PN*3),B=new Float32Array(PN*3),C=new Float32Array(PN*3),CA=new Float32Array(PN*3),CB=new Float32Array(PN*3),CC=new Float32Array(PN*3),RD=new Float32Array(PN);
@@ -898,7 +904,7 @@ const G={ok:false};
   el.addEventListener('click',()=>{const i=TEAM.findIndex(t=>t[0]===k);goTo(3,i<0?6:i);});G.labs[k]={el,v:0};});
  G.tokTag=document.createElement('div');G.tokTag.className='ptag big';G.tokTag.innerHTML='<i>01</i><span>Idea</span>';labs.appendChild(G.tokTag);
  G.pmark=document.createElement('div');G.pmark.className='pmark';G.pmark.innerHTML='<svg viewBox="0 0 424.1 429.98"><use href="#mark"/></svg>';labs.appendChild(G.pmark);
- G.jTags=PL.map((p,i)=>{const el=document.createElement('div');el.className='ptag';el.innerHTML='<i>0'+(i+1)+'</i><span>'+ST[i][0]+'</span>';labs.appendChild(el);return el;});
+ G.jTags=G.SLP.map((p,i)=>{const el=document.createElement('div');el.className='ptag';el.innerHTML='<i>0'+(i+1)+'</i><span>'+STS[i]+'</span>';labs.appendChild(el);return el;});
 
  G.update=function(S,t,dt,hlKey,step){
   /* island */
@@ -930,10 +936,16 @@ const G={ok:false};
   for(const m of FADE)m.opacity=m.userData.o*S.isl;
   /* stairs */
   stairs.visible=S.stairs>.01;
-  if(stairs.visible){const cp=G.stairPos(S.js);climber.position.copy(cp);
-   plates.forEach((p,i)=>{const lit=S.js>=i-.15?1:0;p.lit+=(lit-p.lit)*Math.min(1,dt*5);p.ed.material.userData.o=.35+p.lit*.65;p.gl.material.userData.o=.08+p.lit*.4;p.g.position.y=PL[i].y+Math.sin(t*.9+i)*.04;});
-   inv.forEach((v,k)=>{const an=v.a+t*.45,c=PL[6];v.sp.position.set(c.x+Math.cos(an)*1.03,c.y+.3+Math.sin(t*2+k)*.05,c.z+Math.sin(an)*1.03);v.sp.material.userData.o=.25+ss(5.4,6,S.js)*.7;});const gd=ss(4.6,5,S.js);gateR.material.userData.o=.35+gd*.65;gateD.material.userData.o=.06+gd*.4;gateR2.rotation.z=t*.5;gate.scale.setScalar(1+gd*.15);
-   stairLine.material.userData.o=.45;clR.scale.setScalar(1+Math.sin(t*4)*.08);}
+  if(stairs.visible){const js=S.js;
+   slabs.forEach((sl,k)=>{const a=k===0?1:ss(k-.95,k-.1,js),e=a*a*(3-2*a);sl.g.visible=a>.01;
+    sl.g.position.lerpVectors(SRC,sl.fin,e);sl.g.position.y+=Math.sin(e*Math.PI)*1.1+(a>=1?Math.sin(t*.9+k)*.025:0);
+    sl.g.scale.setScalar(.3+.7*e);sl.g.rotation.y=bAz+(1-e)*2.2;
+    const h=clamp(1-Math.abs(js-k)*1.3),done=ss(5.4,6,js);
+    sl.ed.material.userData.o=.32+h*.68+done*.3;sl.top.material.userData.o=.55+h*.45;sl.gl.material.userData.o=h*.35+done*.12;
+    sl.trail.material.userData.o=Math.sin(e*Math.PI)*.9;});
+   const dr=ss(4.5,5,js);frame.material.userData.o=dr*.55+ss(5.4,6,js)*.4;frame.material.color.copy(ss(5.4,6,js)>.5?LIME:PALE);
+   scan.position.set(TW.x,Y0-.1+(Math.sin(t*1.3)*.5+.5)*(6*DY+.2),TW.z);scan.material.userData.o=dr*(1-ss(5.4,6,js))*.55;
+   pad.material.userData.o=.3+Math.sin(t*2)*.1;}
   for(const [m,gr] of FADEX){m.opacity=m.userData.o*(gr===stairs?S.stairs:S.portal);}
   /* particles */
   parts.visible=S.parts>.02&&G.act>=5&&G.act<=7;if(parts.visible){G.pMat.uniforms.uA.value=S.parts;G.pMat.uniforms.uM.value=S.pm;G.pMat.uniforms.uT.value=t;parts.quaternion.copy(cam.quaternion);
@@ -965,7 +977,7 @@ const F=[
  p=>{const t=p;const P=G.ok?G.rc.getPointAt(clamp(t)):{x:0,y:0,z:0};return {tx:P.x,ty:P.y+.55,tz:P.z,yaw:G.ok?G.routeAz(t)+.25:0,el:.4,dist:7.6,route:t,tokA:1,lab:.55,syn:.1};},
  p=>{const s=p*3;return {tx:0,ty:G.ok?G.aTop.y-.1:2.4,tz:0,yaw:5.9+p*.9-Math.PI*2,el:.16,dist:lerp(6.8,5.6,p),halo:bump(s,0)*1.1,core:bump(s,1)*1.1,orbit:clamp((s-1.7)*1.4),syn:.15+clamp((s-1.8)*1.3)*.85,lab:0};},
  p=>{const s=Math.min(6.999,p*7),i=Math.floor(s),fr=s-i,e=ss(0,.42,fr);const A=teamCam(TEAMK[Math.max(0,i-1)]),B=teamCam(TEAMK[i]);const o={lab:1,syn:.2};for(const k in B)o[k]=lerp(A[k],B[k],i?e:1);return o;},
- p=>{const s=Math.min(6.999,p*7),i=Math.floor(s),fr=s-i;const js=i===0?0:(i-1)+ss(0,.5,fr);const P=G.ok?G.stairPos(js):{x:0,y:0,z:0};return {tx:P.x*.92,ty:P.y+.35,tz:P.z*.92,yaw:(G.ok?G.bAz:1.4)-1.15+js*.11,el:.2+js*.02,dist:7.4,stairs:1,js,isl:.6,syn:.08};},
+ p=>{const s=Math.min(6.999,p*7),i=Math.floor(s),fr=s-i;const js=i===0?0:(i-1)+ss(0,.5,fr);const P=G.ok?G.stairPos(js):{x:0,y:0,z:0};const z=ss(4.4,5.2,js),Y=G.ok?G.TY:[1.3,.46];return {tx:P.x*.94,ty:lerp(P.y+.15,Y[0]+3*Y[1],z),tz:P.z*.94,yaw:(G.ok?G.bAz:1.4)-.9+js*.06,el:.46,dist:lerp(6.6,9.4,z),stairs:1,js,isl:.6,syn:.08};},
  p=>({tx:0,ty:0,tz:0,yaw:1.6+p*1.1,el:1.12,dist:15.5,isl:.4,syn:.1}),
  p=>({tx:0,ty:2.7,tz:0,yaw:2.9+p*.5,el:.08,dist:9.5,isl:.04,parts:1,pm:ss(.2,.46,p)+ss(.54,.8,p),syn:0}),
  p=>{const s=Math.min(2.999,p*3),i=Math.floor(s),fr=s-i;const who=clamp(i-1+ss(0,.55,fr),0,2);return {tx:0,ty:0,tz:0,yaw:3.6+p*.3,el:lerp(.8,1.0,who/2),dist:lerp(14,19,who/2),who,isl:1,syn:.1};},
@@ -1025,7 +1037,7 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;const t=(now
    G.rc.getPointAt(clamp(cur.route),V3);V3.y+=1.1;V3.project(c);tg.style.opacity=(cur.tokA*cur.isl).toFixed(3);tg.style.transform='translate3d('+((V3.x*.5+.5)*wv).toFixed(1)+'px,'+((-V3.y*.5+.5)*hv).toFixed(1)+'px,0) translate(-50%,-100%)';}
   {const pm=G.pmark,o=cur.portal;if(o>.01){V3.set(0,0,0);G.portal.localToWorld(V3);const cx=V3.clone().project(c);V3.set(3.2,0,0);G.portal.localToWorld(V3);V3.project(c);const rp=Math.abs(V3.x-cx.x)*.5*wv;
    pm.style.opacity=(o*(cx.z<1?1:0)).toFixed(3);pm.style.width=(rp*.5).toFixed(1)+'px';pm.style.transform='translate3d('+((cx.x*.5+.5)*wv).toFixed(1)+'px,'+((-cx.y*.5+.5)*hv).toFixed(1)+'px,0) translate(-50%,-50%)';}else pm.style.opacity=0;}
-  G.jTags.forEach((el,j)=>{V3.copy(G.PL[j]);V3.y+=.25;V3.project(c);const vis=V3.z<1;el.style.opacity=(cur.stairs*(vis?1:0)*(cur.js>=j-.3?1:.45)*(small&&Math.abs(cur.js-j)>.6?0:1)).toFixed(3);el.style.transform='translate3d('+((V3.x*.5+.5)*wv+16).toFixed(1)+'px,'+((-V3.y*.5+.5)*hv).toFixed(1)+'px,0) translate(0,-50%)';el.classList.toggle('big',Math.round(cur.js)===j);});
+  G.jTags.forEach((el,j)=>{V3.copy(G.SLP[j]);V3.y+=.02;V3.project(c);const vis=V3.z<1;el.style.opacity=(cur.stairs*(vis?1:0)*(cur.js>=j-.15?1:0)*(small&&Math.abs(cur.js-j)>.6&&cur.js<4.5?0:1)).toFixed(3);el.style.transform='translate3d('+((V3.x*.5+.5)*wv+Math.min(96,wv*(small?.025:.075))).toFixed(1)+'px,'+((-V3.y*.5+.5)*hv).toFixed(1)+'px,0) translate(0,-50%)';el.classList.toggle('big',Math.round(cur.js)===j);});
  }
  requestAnimationFrame(frame);}
 
