@@ -974,7 +974,7 @@ function teamCam(k){if(!G.ok)return D;if(k==='aether')return {tx:0,ty:2.1,tz:0,y
 const TEAMK=TEAM.map(t=>t[0]);
 const F=[
  p=>({tx:0,ty:1.1,tz:0,yaw:.35+p*.55,el:lerp(.8,.52,p),dist:lerp(16.5,13.5,p),syn:.25}),
- p=>{const t=p;const P=G.ok?G.rc.getPointAt(clamp(t)):{x:0,y:0,z:0};return {tx:P.x,ty:P.y+.55,tz:P.z,yaw:G.ok?G.routeAz(t)+.25:0,el:.4,dist:7.6,route:t,tokA:1,lab:.55,syn:.1};},
+ p=>{const t=p;const P=G.ok?G.rc.getPointAt(clamp(t)):{x:0,y:0,z:0};return {tx:P.x,ty:P.y+.55,tz:P.z,yaw:G.ok?G.routeAz(t)+.25:0,el:.4,dist:7.6,route:t,tokA:1,lab:0,syn:.1};},
  p=>{const s=p*3;return {tx:0,ty:G.ok?G.aTop.y-.1:2.4,tz:0,yaw:5.9+p*.9-Math.PI*2,el:.16,dist:lerp(6.8,5.6,p),halo:bump(s,0)*1.1,core:bump(s,1)*1.1,orbit:clamp((s-1.7)*1.4),syn:.15+clamp((s-1.8)*1.3)*.85,lab:0};},
  p=>{const s=Math.min(6.999,p*7),i=Math.floor(s),fr=s-i,e=ss(0,.42,fr);const A=teamCam(TEAMK[Math.max(0,i-1)]),B=teamCam(TEAMK[i]);const o={lab:1,syn:.2};for(const k in B)o[k]=lerp(A[k],B[k],i?e:1);return o;},
  p=>{const s=Math.min(6.999,p*7),i=Math.floor(s),fr=s-i;const js=i===0?0:(i-1)+ss(0,.5,fr);const P=G.ok?G.stairPos(js):{x:0,y:0,z:0};const z=ss(4.4,5.2,js),Y=G.ok?G.TY:[1.3,.46];return {tx:P.x*.94,ty:lerp(P.y+.15,Y[0]+3*Y[1],z),tz:P.z*.94,yaw:(G.ok?G.bAz:1.4)-.9+js*.06,el:.46,dist:lerp(6.6,9.4,z),stairs:1,js,isl:.6,syn:.08};},
