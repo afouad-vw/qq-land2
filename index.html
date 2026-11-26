@@ -222,7 +222,9 @@ h1 em,.h2 em{font-style:normal;color:var(--lime)}
 
 /* join */
 .jrail{list-style:none;margin:0;padding:0;display:grid;gap:7px}
-.jrail li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:start;padding:9px 12px;border-radius:14px;border:1px solid var(--line2);background:rgba(14,16,13,.88)}
+.jrail li{position:relative;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:start;padding:9px 12px;border-radius:14px;border:1px solid var(--line2);background:rgba(14,16,13,.88);transition:border-color .5s,background .5s}
+.jrail li.on{border-color:rgba(198,255,52,.6);background:rgba(24,32,16,.94)}
+.jrail li.on h3{color:var(--lime)}
 .jrail .n{font:500 11px/1.6 var(--mono);color:var(--lime)}
 .jrail h3{font-size:15.5px;letter-spacing:-.02em;line-height:1.3}
 .jrail p{font-size:13px;color:var(--mute);line-height:1.4;margin-top:2px}
@@ -888,7 +890,7 @@ const G={ok:false};
    minis.push({g,r,c,bm,amber,hex:hx,grid:[(col-1.5)*3.1,(row-1)*3.1],ph:Math.random()*6});}}
 
  /* the portal */
- const portal=new THREE.Group();portal.position.set(0,3.2,-11);scene.add(portal);G.portal=portal;
+ const portal=new THREE.Group();portal.position.set(0,3.2,-11);portal.visible=false;G.portal=portal;
  {const t1=new THREE.Mesh(new THREE.TorusGeometry(3.2,.045,16,240),basic(LIME,.8));portal.add(t1);
   const t2=new THREE.Mesh(new THREE.RingGeometry(3.42,3.45,240,1,0,Math.PI*1.25),basic(PALE,.45));portal.add(t2);
   const t3=new THREE.Mesh(new THREE.RingGeometry(3.75,3.95,240),basic(LIME,.06));portal.add(t3);
@@ -908,7 +910,7 @@ const G={ok:false};
  ['aether',...ORDER].forEach(k=>{const el=document.createElement('div');el.className='lab'+(k==='aether'?' ae':'');el.innerHTML=NAMES[k]+'<span class="tt"><b>'+NAMES[k]+'</b>'+TIPS[k]+'</span>';labs.appendChild(el);
   el.addEventListener('click',()=>{const i=TEAM.findIndex(t=>t[0]===k);goTo(3,i<0?6:i);});G.labs[k]={el,v:0};});
  G.tokTag=document.createElement('div');G.tokTag.className='ptag big';G.tokTag.innerHTML='<i>01</i><span>Idea</span>';labs.appendChild(G.tokTag);
- G.pmark=document.createElement('div');G.pmark.className='pmark';G.pmark.innerHTML='<svg viewBox="0 0 424.1 429.98"><use href="#mark"/></svg>';labs.appendChild(G.pmark);
+ G.pmark=document.createElement('div');G.pmark.className='pmark';G.pmark.innerHTML='<svg viewBox="0 0 424.1 429.98"><use href="#mark"/></svg>';
  G.jTags=G.SLP.map((p,i)=>{const el=document.createElement('div');el.className='ptag';el.innerHTML='<i>0'+(i+1)+'</i><span>'+STS[i]+'</span>';labs.appendChild(el);return el;});
 
  G.update=function(S,t,dt,hlKey,step){
@@ -919,7 +921,7 @@ const G={ok:false};
   const dp=dg.attributes.position.array;for(let i=0;i<DN;i++){const s=dseed[i];dp[i*3+1]=s[0]+Math.sin(t*s[2]*3+s[1])*.25;}dg.attributes.position.needsUpdate=true;
   dust.rotation.y=t*.01;dust.material.opacity=.24*(.4+.6*S.isl);
   /* agents */
-  for(const k in agents){const a=agents[k];const target=hlKey==='all4'?(['staffing','dealterms','investorrel','presence'].includes(k)?1:0):(hlKey===k?1:0);a.hl+=(target-a.hl)*Math.min(1,dt*4);
+  for(const k in agents){const a=agents[k];const target=Array.isArray(hlKey)?(hlKey.includes(k)?1:0):hlKey==='all4'?(['staffing','dealterms','investorrel','presence'].includes(k)?1:0):(hlKey===k?1:0);a.hl+=(target-a.hl)*Math.min(1,dt*4);
    const bob=Math.sin(t*1.1+a.bob)*.05;a.sp.position.y=a.lift+bob;const sc=1+a.hl*.14;a.sp.scale.y=a.h*sc;a.sp.scale.x=a.h*sc*((a.sp.material.map&&a.sp.material.map.image)?a.sp.material.map.image.width/a.sp.material.map.image.height:.7);
    a.ring2.rotation.z=t*.4+a.pt*6;a.aura.material.userData.o=(a.isA?.14+S.core*.3:0)+a.hl*.35;
    const pt=(t*.45+a.pt)%1;a.pulse.scale.setScalar(1+pt*1.8);a.pulse.material.userData.o=(1-pt)*(.35+a.hl*.5);
@@ -971,12 +973,13 @@ const G={ok:false};
 if(!G.ok){document.documentElement.classList.add('nogl');$('#still').src=IMG.aether;}
 
 /* ---------------- camera states per chapter ---------------- */
-const KEYS=['labA','tx','ty','tz','yaw','el','dist','ox','oy','isl','lab','syn','halo','core','orbit','route','tokA','stairs','js','parts','pm','who','portal','pp'];
-const D={labA:0,tx:0,ty:.8,tz:0,yaw:.5,el:.6,dist:14,ox:0,oy:0,isl:1,lab:0,syn:.15,halo:0,core:0,orbit:0,route:0,tokA:0,stairs:0,js:0,parts:0,pm:0,who:0,portal:0,pp:0};
+const KEYS=['labOn','labA','tx','ty','tz','yaw','el','dist','ox','oy','isl','lab','syn','halo','core','orbit','route','tokA','stairs','js','parts','pm','who','portal','pp'];
+const D={labOn:0,labA:0,tx:0,ty:.8,tz:0,yaw:.5,el:.6,dist:14,ox:0,oy:0,isl:1,lab:0,syn:.15,halo:0,core:0,orbit:0,route:0,tokA:0,stairs:0,js:0,parts:0,pm:0,who:0,portal:0,pp:0};
 const bump=(s,k)=>clamp(1-Math.abs(s-(k+.5))*1.15);
 function teamCam(k){if(!G.ok)return D;if(k==='aether')return {tx:0,ty:2.1,tz:0,yaw:-1.05,el:.3,dist:8.2};if(k==='more')return {tx:0,ty:.6,tz:0,yaw:4.95,el:.88,dist:15.5};
  const [x,z]=G.MAP[k];let yaw=Math.atan2(x,z);if(k==='market')yaw+=Math.PI*2;if(k==='dealflow')yaw=yaw;return {tx:x*.85,ty:G.H(x,z)+1,tz:z*.85,yaw,el:.26,dist:5.6};}
 const TEAMK=TEAM.map(t=>t[0]);
+const JOINHL=['aether','assessment','staffing','build',['dealflow','dealterms','investorrel']];const JLI=$$('.jrail li');
 const F=[
  p=>({tx:0,ty:1.1,tz:0,yaw:.35+p*.55,el:lerp(.8,.52,p),dist:lerp(16.5,13.5,p),syn:.25}),
  p=>{const t=p;const P=G.ok?G.rc.getPointAt(clamp(t)):{x:0,y:0,z:0};return {tx:P.x,ty:P.y+.55,tz:P.z,yaw:G.ok?G.routeAz(t)+.25:0,el:.4,dist:7.6,route:t,tokA:1,lab:0,syn:.1};},
@@ -986,13 +989,12 @@ const F=[
  p=>({tx:0,ty:0,tz:0,yaw:1.6+p*1.1,el:1.12,dist:15.5,isl:.4,syn:.1}),
  p=>({tx:0,ty:2.7,tz:0,yaw:2.9+p*.5,el:.08,dist:9.5,isl:.04,parts:1,pm:ss(.2,.46,p)+ss(.54,.8,p),syn:0}),
  p=>{const s=Math.min(2.999,p*3),i=Math.floor(s),fr=s-i;const who=clamp(i-1+ss(0,.55,fr),0,2);return {tx:0,ty:0,tz:0,yaw:3.6+p*.3,el:lerp(.8,1.0,who/2),dist:lerp(14,19,who/2),who,isl:1,syn:.1};},
- p=>({tx:0,ty:3.2,tz:-11,yaw:Math.PI*2,el:lerp(.22,.04,p),dist:lerp(21,stack?9.5:12.5,ss(0,1,p)),portal:1,pp:p,isl:1-ss(.3,.85,p),syn:.3})
+ p=>({tx:0,ty:.7,tz:0,yaw:Math.PI*2+.3+p*.25,el:lerp(.62,.74,p),dist:lerp(16.5,14.5,p),isl:1,syn:.85,labOn:1})
 ];
 function state(i,p){const o=Object.assign({},D,F[i](p));
  if(stack){o.ox=0;const pr=SECS[i].pr,nav=58,top=pr?pr.top:VH*.55,free=Math.max(140,top-nav),cy=nav+free/2;
-  o.oy=i===5?.12:clamp(.5-cy/VH,0,.32);
-  o.dist*=Math.min(2.5,clamp(1.05/Math.max(.3,innerWidth/innerHeight)*.82,1,1.85)*(i===5?1:clamp(VH*.5/free,1,1.6)));
-  if(i===8)o.isl*=1-ss(.2,.8,p);}
+  o.oy=i===5?.12:clamp(.5-cy/VH,0,.32);if(i===8)o.dist*=1.2;
+  o.dist*=Math.min(2.5,clamp(1.05/Math.max(.3,innerWidth/innerHeight)*.82,1,1.85)*(i===5?1:clamp(VH*.5/free,1,1.6)));}
  else{o.ox=.19*SECS[i].side;if(i===5)o.ox=.22;o.oy=0;}
  return o;}
 
@@ -1027,14 +1029,14 @@ function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;const t=(now
   c.position.set(cur.tx+cur.dist*Math.sin(yaw)*Math.cos(el),cur.ty+cur.dist*Math.sin(el),cur.tz+cur.dist*Math.cos(yaw)*Math.cos(el));
   camT.set(cur.tx,cur.ty,cur.tz);c.lookAt(camT);
   c.setViewOffset(GW,GH,-cur.ox*GW,cur.oy*GH,GW,GH);
-  let hl=null;if(act===3){const st=Math.min(6,Math.floor(ap*7));hl=TEAMK[st]==='more'?'all4':TEAMK[st];}else if(act===2)hl='aether';
+  let hl=null;if(act===8){const ji=Math.floor(t/2.2)%5;hl=JOINHL[ji];if(ji!==window._ji){window._ji=ji;JLI.forEach((l,k)=>l.classList.toggle('on',k===ji));}}else if(act===3){const st=Math.min(6,Math.floor(ap*7));hl=TEAMK[st]==='more'?'all4':TEAMK[st];}else if(act===2)hl='aether';
   else if(act===1){const st=Math.min(6,Math.floor(ap*7));hl=['identity','assessment','staffing','build','dealflow','dealterms','investorrel'][st];}
   G.act=act;G.update(cur,t,dt,hl);
   G.r.render(G.scene,c);
   /* labels */
   const L=G.labs,wv=GW,hv=GH,small=stack;const PR=SECS[act].pr;
   for(const key in L){const a=G.agents[key],l=L[key];V3.copy(a.top);V3.y+=a.sp.position.y-a.lift;V3.multiplyScalar(1);V3.applyMatrix4(G.root.matrixWorld);V3.project(c);
-   const sx=(V3.x*.5+.5)*wv,sy=(-V3.y*.5+.5)*hv;const vis=V3.z<1&&Math.abs(V3.x)<1.1&&Math.abs(V3.y)<1.1&&!(PR&&sx>PR.left-30&&sx<PR.right+30&&sy>PR.top-60&&sy<PR.bottom+30);const isOn=a.hl>.5;let o=Math.max(cur.lab,key==='aether'?cur.labA:0)*cur.isl*(vis?1:0)*(1-clamp(cur.who));if(small&&!isOn)o=0;
+   const sx=(V3.x*.5+.5)*wv,sy=(-V3.y*.5+.5)*hv;const vis=V3.z<1&&Math.abs(V3.x)<1.1&&Math.abs(V3.y)<1.1&&!(PR&&sx>PR.left-30&&sx<PR.right+30&&sy>PR.top-60&&sy<PR.bottom+30);const isOn=a.hl>.5;let o=Math.max(cur.lab,key==='aether'?cur.labA:0,a.hl>.5?cur.labOn:0)*cur.isl*(vis?1:0)*(1-clamp(cur.who));if(small&&!isOn)o=0;
    l.el.style.opacity=o.toFixed(3);l.el.style.pointerEvents=o>.5?'auto':'none';l.el.classList.toggle('on',isOn&&o>.1);
    l.el.style.transform='translate3d('+((V3.x*.5+.5)*wv).toFixed(1)+'px,'+((-V3.y*.5+.5)*hv).toFixed(1)+'px,0) translate(-50%,-140%)';}
   /* relay tag */
