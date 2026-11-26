@@ -704,6 +704,13 @@ const G={ok:false};
  const AB=THREE.AdditiveBlending;
  function glowTex(c1,c0){const s=128,c=document.createElement('canvas');c.width=c.height=s;const g=c.getContext('2d');const gr=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);gr.addColorStop(0,c1);gr.addColorStop(.3,c0);gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,s,s);return new THREE.CanvasTexture(c);}
  const GLOW=glowTex('rgba(255,255,240,1)','rgba(198,255,52,.5)'),GLOW_S=glowTex('rgba(255,255,255,1)','rgba(255,255,255,.3)');
+ const PTS=[];
+ /* point sprites through a minimal shader: colour clamped to 0..1 and never NaN, so no GPU can turn a glow into a dark speck */
+ function ptsMat(color,size,op){const u={uC:{value:new THREE.Color(color)},uOp:{value:op},uS:{value:size},uScale:{value:400},uMap:{value:GLOW_S}};
+  const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:AB,uniforms:u,
+   vertexShader:'uniform float uS,uScale;void main(){vec4 mv=modelViewMatrix*vec4(position,1.0);gl_PointSize=max(1.0,uS*uScale/max(0.1,-mv.z));gl_Position=projectionMatrix*mv;}',
+   fragmentShader:'uniform vec3 uC;uniform float uOp;uniform sampler2D uMap;void main(){float a=clamp(texture2D(uMap,gl_PointCoord).a*uOp,0.0,1.0);if(!(a>0.004))discard;gl_FragColor=vec4(clamp(uC,0.0,1.0),a);}'});
+  Object.defineProperty(m,'opacity',{get(){return u.uOp.value;},set(v){u.uOp.value=(v>=0)?v:0;}});PTS.push(m);return m;}
  const glowSprite=(size,color,op)=>{const s=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,color:color||0xffffff,transparent:true,opacity:op==null?1:op,depthWrite:false,blending:AB}));s.scale.set(size,size,1);return s;};
  const basic=(color,op,extra)=>new THREE.MeshBasicMaterial(Object.assign({color,transparent:true,opacity:op,side:THREE.DoubleSide,depthWrite:false,blending:AB},extra||{}));
  const PEAK={aether:[1.25,1.05],identity:[.62,.62],assessment:[.7,.62],staffing:[.6,.6],build:[.9,.72],dealflow:[.82,.68],dealterms:[.66,.6],investorrel:[.58,.6],market:[.74,.66],presence:[.62,.6]};
@@ -746,7 +753,7 @@ const G={ok:false};
  const DN=LOW?50:90,dpos=new Float32Array(DN*3),dseed=[];
  for(let i=0;i<DN;i++){const a=Math.random()*6.28,r=Math.sqrt(Math.random())*7;dpos[i*3]=Math.cos(a)*r;dpos[i*3+2]=Math.sin(a)*r;dpos[i*3+1]=.3+Math.random()*4.2;dseed.push([dpos[i*3+1],Math.random()*6.28,.04+Math.random()*.08]);}
  const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.BufferAttribute(dpos,3));
- const dust=new THREE.Points(dg,new THREE.PointsMaterial({map:GLOW_S,color:PALE,size:.16,transparent:true,opacity:.24,depthWrite:false,blending:AB}));scene.add(dust);
+ const dust=new THREE.Points(dg,ptsMat(PALE,.16,.24));scene.add(dust);
 
  /* agents */
  const agents={};
@@ -789,8 +796,8 @@ const G={ok:false};
  const ctrl=JOURNEY.map(k=>new THREE.Vector3(MAP[k][0],0,MAP[k][1]));const cr=new THREE.CatmullRomCurve3(ctrl,false,'centripetal');
  const RN=200,rpts=cr.getSpacedPoints(RN).map(p=>new THREE.Vector3(p.x,H(p.x,p.z)+.05,p.z));
  const rg=new THREE.BufferGeometry().setFromPoints(rpts);
- const routeFaint=new THREE.Points(rg,new THREE.PointsMaterial({map:GLOW_S,color:LIME,size:.12,transparent:true,opacity:.45,depthWrite:false,blending:AB}));root.add(routeFaint);
- const routeLit=new THREE.Points(rg,new THREE.PointsMaterial({map:GLOW_S,color:PALE,size:.22,transparent:true,opacity:0,depthWrite:false,blending:AB}));root.add(routeLit);
+ const routeFaint=new THREE.Points(rg,ptsMat(LIME,.12,.45));root.add(routeFaint);
+ const routeLit=new THREE.Points(rg,ptsMat(PALE,.22,0));root.add(routeLit);
  const rc=new THREE.CatmullRomCurve3(rpts);G.rc=rc;
  const runners=[0,1,2].map(i=>{const s=glowSprite(.32,PALE,.9);root.add(s);return {s,t:i/3};});
  const tok=new THREE.Group();root.add(tok);
@@ -861,7 +868,7 @@ const G={ok:false};
   g.setAttribute('ca',new THREE.BufferAttribute(CA,3));g.setAttribute('cb',new THREE.BufferAttribute(CB,3));g.setAttribute('cc',new THREE.BufferAttribute(CC,3));g.setAttribute('rd',new THREE.BufferAttribute(RD,1));
   G.pMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:AB,uniforms:{uM:{value:0},uT:{value:0},uA:{value:0},uS:{value:renderer.getPixelRatio()},uTex:{value:GLOW_S}},
    vertexShader:'attribute vec3 b;attribute vec3 c;attribute vec3 ca;attribute vec3 cb;attribute vec3 cc;attribute float rd;uniform float uM,uT,uS;varying vec3 vC;varying float vR;void main(){float m1=smoothstep(rd*0.35,0.65+rd*0.35,clamp(uM,0.0,1.0));float m2=smoothstep(rd*0.35,0.65+rd*0.35,clamp(uM-1.0,0.0,1.0));vec3 p=mix(mix(position,b,m1),c,m2);float sw=sin(m1*3.14159)+sin(m2*3.14159);p+=vec3(sin(uT*0.9+rd*20.0),cos(uT*0.7+rd*13.0),sin(uT*0.8+rd*7.0))*(0.025+sw*0.6);vC=mix(mix(ca,cb,m1),cc,m2);vR=rd;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=(2.6+rd*2.4)*uS*(9.0/-mv.z);gl_Position=projectionMatrix*mv;}',
-   fragmentShader:'uniform float uA;uniform sampler2D uTex;varying vec3 vC;varying float vR;void main(){vec4 t=texture2D(uTex,gl_PointCoord);gl_FragColor=vec4(vC,t.a*uA*(0.8+0.35*vR));}'});
+   fragmentShader:'uniform float uA;uniform sampler2D uTex;varying vec3 vC;varying float vR;void main(){vec4 t=texture2D(uTex,gl_PointCoord);float al=clamp(t.a*uA*(0.8+0.35*vR),0.0,1.0);if(!(al>0.004))discard;gl_FragColor=vec4(clamp(vC,0.0,1.0),al);}'});
   parts.add(new THREE.Points(g,G.pMat));
   G.pCore=glowSprite(3.6,LIME,0);parts.add(G.pCore);
   const pr=new THREE.Mesh(new THREE.RingGeometry(1.55,1.57,128),basic(LIME,0));parts.add(pr);G.pRing=pr;}
@@ -889,9 +896,7 @@ const G={ok:false};
   const tk=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(ticks),new THREE.LineBasicMaterial({color:LIME,transparent:true,opacity:.35,depthWrite:false}));portal.add(tk);
   const d=new THREE.Mesh(new THREE.CircleGeometry(3.15,96),new THREE.MeshBasicMaterial({map:GLOW,color:LIME,transparent:true,opacity:.18,depthWrite:false,blending:AB}));portal.add(d);
   const mark={material:{opacity:0},position:{z:0}};
-  G.portalParts={t1,t2,t3,tk,d,mark};
-  const SN=LOW?160:300,sp=new Float32Array(SN*3);for(let i=0;i<SN;i++){const a=Math.random()*6.28,r=.3+Math.random()*3;sp[i*3]=Math.cos(a)*r;sp[i*3+1]=Math.sin(a)*r;sp[i*3+2]=-Math.random()*14;}
-  const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(sp,3));G.tunnel=new THREE.Points(sg,new THREE.PointsMaterial({map:GLOW_S,color:PALE,size:.12,transparent:true,opacity:0,depthWrite:false,blending:AB}));portal.add(G.tunnel);}
+  G.portalParts={t1,t2,t3,tk,d,mark};}
 
  /* record base opacity of every material under root, so the island can fade as one */
  const FADE=[];root.traverse(o=>{if(o.material&&o.material!==tMat){const m=o.material;if(m.userData.o==null){m.userData.o=m.opacity;FADE.push(m);}}});
@@ -959,9 +964,9 @@ const G={ok:false};
   G.miniMats.forEach(mm=>{mm.uniforms.uT.value=t;mm.uniforms.uFog.value=0;});
   /* portal */
   portal.visible=S.portal>.01;if(portal.visible){const P=G.portalParts;P.t2.rotation.z=t*.3;P.tk.rotation.z=-t*.08;P.mark.material.opacity=S.portal*(.9);P.mark.position.z=.1;P.d.material.opacity=S.portal*(.14+S.pp*.4);
-   G.tunnel.material.opacity=S.portal*.5*ss(.2,1,S.pp);const tp=G.tunnel.geometry.attributes.position.array;for(let i=2;i<tp.length;i+=3){tp[i]+=dt*(1.2+S.pp*5);if(tp[i]>0)tp[i]-=14;}G.tunnel.geometry.attributes.position.needsUpdate=true;}
+   }
  };
- G.resize=function(w,h){renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();G.w=w;G.h=h;};
+ G.resize=function(w,h){renderer.setSize(w,h,false);PTS.forEach(m=>m.uniforms.uScale.value=h*renderer.getPixelRatio()*.5);cam.aspect=w/h;cam.updateProjectionMatrix();G.w=w;G.h=h;};
 })();
 if(!G.ok){document.documentElement.classList.add('nogl');$('#still').src=IMG.aether;}
 
